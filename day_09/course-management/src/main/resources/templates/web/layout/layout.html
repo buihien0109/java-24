@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, cssLib, css, content, jsLib, js)">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Danh sách khóa học</title>
+
+    <link rel="stylesheet" th:href="@{/lib/bootstrap/bootstrap.min.css}">
+    <!--     Link icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!--    Thư viện CSS-->
+    <th:block th:replace="${cssLib} ?: ~{}"></th:block>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <!--    CSS tự viết-->
+    <th:block th:replace="${css} ?: ~{}"></th:block>
+</head>
+
+<body>
+<!--Header-->
+<th:block th:replace="~{web/fragments/fragment :: header}"></th:block>
+
+<!--Content-->
+<th:block th:replace="${content} ?: ~{}"></th:block>
+
+<script th:src="@{/lib/jquery/jquery.min.js}"></script>
+<script th:src="@{/lib/bootstrap/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/lib/axios/axios.min.js}"></script>
+
+<!--    Thư viện JS-->
+<th:block th:replace="${jsLib} ?: ~{}"></th:block>
+
+<!--    JS tự viết-->
+<th:block th:replace="${js} ?: ~{}"></th:block>
+</body>
+
+</html>
