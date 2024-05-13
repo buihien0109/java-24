@@ -11,8 +11,8 @@ import vn.techmaster.demo.model.Book;
 import vn.techmaster.demo.service.BookService;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -29,45 +29,41 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable int id) {
-        Book book = bookService.getBookById(id);
-        if(book != null) {
-            return ResponseEntity.ok(book); // 200
+        Optional<Book> bookOptional = bookService.getAllBooks()
+                .stream()
+                .filter(book -> book.getId() == id)
+                .findFirst();
+        if (bookOptional.isPresent()) {
+            return ResponseEntity.ok(bookOptional.get());
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-//
-//    @GetMapping("/sortByYear")
-//    public ResponseEntity<List<Book>> sortBookByYear() {
-//        books.sort(new Comparator<Book>() {
-//            @Override
-//            public int compare(Book o1, Book o2) {
-//                return o2.getYear() - o1.getYear();
-//            }
-//        });
-//        return ResponseEntity.ok(books);
-//    }
-//
-//    @GetMapping("/search/{keyword}")
-//    public ResponseEntity<List<Book>> searchBook(@PathVariable String keyword) {
-//        List<Book> result = new ArrayList<>();
-//        for (Book book : books) {
-//            if (book.getTitle().toLowerCase().contains(keyword.toLowerCase())) {
-//                result.add(book);
-//            }
-//        }
-//        return ResponseEntity.ok(result);
-//    }
-//
-//    @GetMapping("/startYear/{startYear}/endYear/{endYear}")
-//    public ResponseEntity<List<Book>> getBooksInRangeYear(@PathVariable int startYear,
-//                                                          @PathVariable int endYear) {
-//        List<Book> result = new ArrayList<>();
-//        for (Book book : books) {
-//            if (book.getYear() >= startYear && book.getYear() <= endYear) {
-//                result.add(book);
-//            }
-//        }
-//        return ResponseEntity.ok(result);
-//    }
+    @GetMapping("/sortByYear")
+    public ResponseEntity<List<Book>> sortBookByYear() {
+        List<Book> books = bookService.getAllBooks()
+                .stream()
+                .sorted((b1, b2) -> b2.getYear() - b1.getYear())
+                .toList();
+        return ResponseEntity.ok(books);
+    }
+
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<Book>> searchBook(@PathVariable String keyword) {
+        List<Book> books = bookService.getAllBooks()
+                .stream()
+                .filter(book -> book.getTitle().toLowerCase().contains(keyword.toLowerCase()))
+                .toList();
+        return ResponseEntity.ok(books);
+    }
+
+    @GetMapping("/startYear/{startYear}/endYear/{endYear}")
+    public ResponseEntity<List<Book>> getBooksInRangeYear(@PathVariable int startYear,
+                                                          @PathVariable int endYear) {
+        List<Book> books = bookService.getAllBooks()
+                .stream()
+                .filter(book -> book.getYear() >= startYear && book.getYear() <= endYear)
+                .toList();
+        return ResponseEntity.ok(books);
+    }
 }
