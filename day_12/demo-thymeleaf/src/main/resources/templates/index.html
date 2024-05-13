@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home page</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h1>Home page 123 456 789</h1>
+
+<h2>Thông tin sách</h2>
+<ul>
+    <li th:text="${book.id}"></li>
+    <li th:text="${book.title}"></li>
+    <li th:text="${book.author}"></li>
+    <li th:text="${book.year}"></li>
+</ul>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Year</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.year}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
