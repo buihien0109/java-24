@@ -56,22 +56,75 @@
 <!--    <a th:href="@{/books?page={page} (page=${pageData.getCurrentPage + 1})}">Trang sau</a>-->
 <!--</button>-->
 
-<button th:classappend="${pageData.getCurrentPage() == 1 ? 'disabled' : ''}">
+<button class="btn btn-prev"
+        th:classappend="${pageData.getCurrentPage() == 1 ? 'disabled' : ''}">
     <span>Trang trước</span>
 </button>
-<button th:each="number : ${#numbers.sequence(1, pageData.getTotalPages())}"
+<button class="btn btn-page"
+        th:data-page="${number}"
+        th:each="number : ${#numbers.sequence(1, pageData.getTotalPages())}"
         th:classappend="${pageData.getCurrentPage() == number} ? 'active' : ''">
     <span th:text="${number}">1</span>
 </button>
-<button th:classappend="${pageData.getCurrentPage() == pageData.getTotalPages() ? 'disabled' : ''}">
+<button class="btn btn-next"
+        th:classappend="${pageData.getCurrentPage() == pageData.getTotalPages() ? 'disabled' : ''}">
     <span>Trang sau</span>
 </button>
 
 <script>
-// Nếu currentPage = 3
-// Bấm vào trang trước: alert('Trang hiện tại: 2')
-// Bấm vào trang sau: alert('Trang hiện tại: 4')
-// Bấm vào trang 5: alert('Trang hiện tại: 5')
+    const btnPrev = document.querySelector('.btn-prev');
+    const btnNext = document.querySelector('.btn-next');
+    const btnPages = document.querySelectorAll('.btn-page');
+    let currentPage = Number(document.querySelector('.active').dataset.page);
+
+    btnPrev.addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            btnPrev.classList.remove('disabled');
+            window.location.href = `/books?page=${currentPage}`;
+        } else {
+            btnPrev.classList.add('disabled');
+        }
+
+    })
+
+    btnNext.addEventListener("click", () => {
+        if (currentPage < btnPages.length) {
+            currentPage++;
+            btnNext.classList.remove('disabled');
+            window.location.href = `/books?page=${currentPage}`;
+        } else {
+            btnNext.classList.add('disabled');
+        }
+    })
+
+    btnPages.forEach(btn => {
+        btn.addEventListener("click", () => {
+            currentPage = Number(btn.dataset.page);
+
+            document.querySelector('.active').classList.remove('active');
+            btn.classList.add('active');
+
+            // Kiểm tra nut next, prev
+            if (currentPage === 1) {
+                btnPrev.classList.add('disabled');
+            } else {
+                btnPrev.classList.remove('disabled');
+            }
+
+            if (currentPage === btnPages.length) {
+                btnNext.classList.add('disabled');
+            } else {
+                btnNext.classList.remove('disabled');
+            }
+
+            window.location.href = `/books?page=${currentPage}`;
+        })
+    })
+    // Nếu currentPage = 3
+    // Bấm vào trang trước: alert('Trang hiện tại: 2')
+    // Bấm vào trang sau: alert('Trang hiện tại: 4')
+    // Bấm vào trang 5: alert('Trang hiện tại: 5')
 </script>
 </body>
 </html>
