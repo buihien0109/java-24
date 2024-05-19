@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách book</title>
+
+    <style>
+        .disabled {
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: #ccc;
+        }
+
+        .active {
+            background-color: darkorange;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<h2>Danh sách book</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Year</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${pageData.getContent()}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.year}"></td>
+        <td>
+            <a th:href="@{/books/{id} (id = ${book.id})}">Xem chi tiết</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+
+<!--<button th:classappend="${pageData.getCurrentPage() == 1 ? 'disabled' : ''}">-->
+<!--    <a th:href="@{/books?page={page} (page=${pageData.getCurrentPage - 1})}">Trang trước</a>-->
+<!--</button>-->
+<!--<button th:each="number : ${#numbers.sequence(1, pageData.getTotalPages())}"-->
+<!--        th:classappend="${pageData.getCurrentPage() == number} ? 'active' : ''">-->
+<!--    <a th:href="@{/books?page={page} (page=${number})}" th:text="${number}">1</a>-->
+<!--</button>-->
+<!--<button th:classappend="${pageData.getCurrentPage() == pageData.getTotalPages() ? 'disabled' : ''}">-->
+<!--    <a th:href="@{/books?page={page} (page=${pageData.getCurrentPage + 1})}">Trang sau</a>-->
+<!--</button>-->
+
+<button th:classappend="${pageData.getCurrentPage() == 1 ? 'disabled' : ''}">
+    <span>Trang trước</span>
+</button>
+<button th:each="number : ${#numbers.sequence(1, pageData.getTotalPages())}"
+        th:classappend="${pageData.getCurrentPage() == number} ? 'active' : ''">
+    <span th:text="${number}">1</span>
+</button>
+<button th:classappend="${pageData.getCurrentPage() == pageData.getTotalPages() ? 'disabled' : ''}">
+    <span>Trang sau</span>
+</button>
+
+<script>
+// Nếu currentPage = 3
+// Bấm vào trang trước: alert('Trang hiện tại: 2')
+// Bấm vào trang sau: alert('Trang hiện tại: 4')
+// Bấm vào trang 5: alert('Trang hiện tại: 5')
+</script>
+</body>
+</html>
