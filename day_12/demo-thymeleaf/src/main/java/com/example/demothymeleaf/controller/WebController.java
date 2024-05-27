@@ -69,6 +69,11 @@ public class WebController {
         return "book-list";
     }
 
+    @GetMapping("/books/search")
+    public String getSearchBook(Model model) {
+        return "search-book";
+    }
+
     @GetMapping("/books/{id}")
     public String getBookDetail(Model model, @PathVariable int id) {
         // Tìm sách theo id
