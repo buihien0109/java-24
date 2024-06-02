@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WebService {
@@ -18,5 +20,9 @@ public class WebService {
     public Page<Movie> findByType(MovieType type, Boolean status, Integer page, Integer limit) {
         Pageable pageable = PageRequest.of(page - 1, limit, Sort.by("publishedAt").descending());
         return movieRepository.findByTypeAndStatus(type, status, pageable);
+    }
+
+    public List<Movie> getHotMovie() {
+        return movieRepository.findTop10ByStatusOrderByRatingDesc(true);
     }
 }

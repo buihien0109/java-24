@@ -44,4 +44,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 //    List<Movie> findTop3ByNameContaining(String keyword);
 
     Page<Movie> findByTypeAndStatus(MovieType type, Boolean status, Pageable pageable);
+
+    // Select * from movies where status = ? order by rating desc limit 10
+    List<Movie> findTop10ByStatusOrderByRatingDesc(Boolean status);
 }

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class WebController {
@@ -18,6 +20,15 @@ public class WebController {
 
     @GetMapping
     public String getHomePage(Model model) {
+        List<Movie> dsPhimHot = webService.getHotMovie();
+        List<Movie> dsPhimBo = webService.findByType(MovieType.PHIM_BO, true, 1, 6).getContent();
+        List<Movie> dsPhimLe = webService.findByType(MovieType.PHIM_LE, true, 1, 6).getContent();
+        List<Movie> dsPhimChieuRap = webService.findByType(MovieType.PHIM_CHIEU_RAP, true, 1, 6).getContent();
+
+        model.addAttribute("dsPhimHot", dsPhimHot);
+        model.addAttribute("dsPhimBo", dsPhimBo);
+        model.addAttribute("dsPhimLe", dsPhimLe);
+        model.addAttribute("dsPhimChieuRap", dsPhimChieuRap);
         return "web/index";
     }
 
