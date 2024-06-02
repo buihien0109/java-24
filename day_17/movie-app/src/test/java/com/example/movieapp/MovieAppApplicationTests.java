@@ -33,7 +33,7 @@ class MovieAppApplicationTests {
                     .releaseYear(faker.number().numberBetween(2021, 2024))
                     .rating(faker.number().randomDouble(1, 1, 10))
                     .trailerUrl("https://www.youtube.com/embed/YPY7J-flzE8?si=NIAaDGXL68JdDCux")
-                    .type(MovieType.values()[faker.number().numberBetween(0, MovieType.values().length - 1)])
+                    .type(MovieType.values()[faker.number().numberBetween(0, MovieType.values().length)])
                     .status(status)
                     .createdAt(LocalDateTime.now())
                     .updatedAt(LocalDateTime.now())

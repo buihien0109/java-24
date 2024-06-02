@@ -34,12 +34,22 @@ public class WebController {
     }
 
     @GetMapping("/phim-le")
-    public String getPhimLePage(Model model) {
+    public String getPhimLePage(Model model,
+                                @RequestParam(defaultValue = "1") Integer page,
+                                @RequestParam(defaultValue = "12") Integer limit) {
+        Page<Movie> pageData = webService.findByType(MovieType.PHIM_LE, true, page, limit);
+        model.addAttribute("pageData", pageData);
+        model.addAttribute("currentPage", page);
         return "web/phim-le";
     }
 
     @GetMapping("/phim-chieu-rap")
-    public String getPhimChieuRapPage(Model model) {
+    public String getPhimChieuRapPage(Model model,
+                                      @RequestParam(defaultValue = "1") Integer page,
+                                      @RequestParam(defaultValue = "12") Integer limit) {
+        Page<Movie> pageData = webService.findByType(MovieType.PHIM_CHIEU_RAP, true, page, limit);
+        model.addAttribute("pageData", pageData);
+        model.addAttribute("currentPage", page);
         return "web/phim-chieu-rap";
     }
 
