@@ -1,8 +1,9 @@
 package com.example.movieapp;
 
-import com.example.movieapp.entity.Movie;
+import com.example.movieapp.entity.*;
 import com.example.movieapp.model.enums.MovieType;
-import com.example.movieapp.repository.MovieRepository;
+import com.example.movieapp.model.enums.UserRole;
+import com.example.movieapp.repository.*;
 import com.github.javafaker.Faker;
 import com.github.slugify.Slugify;
 import org.junit.jupiter.api.Test;
@@ -10,19 +11,163 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @SpringBootTest
 class MovieAppApplicationTests {
     @Autowired
     private MovieRepository movieRepository;
 
+    @Autowired
+    private GenreRepository genreRepository;
+
+    @Autowired
+    private ActorRepository actorRepository;
+
+    @Autowired
+    private DirectorRepository directorRepository;
+
+    @Autowired
+    private CountryRepository countryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Test
+    void save_genres() {
+        Faker faker = new Faker();
+        Slugify slugify = Slugify.builder().build();
+
+        for (int i = 0; i < 20; i++) {
+            String name = faker.funnyName().name();
+            Genre genre = Genre.builder()
+                    .name(name)
+                    .slug(slugify.slugify(name))
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+            genreRepository.save(genre);
+        }
+    }
+
+    @Test
+    void save_actors() {
+        Faker faker = new Faker();
+        Slugify slugify = Slugify.builder().build();
+        for (int i = 0; i < 100; i++) {
+            String name = faker.name().fullName();
+            Actor actor = Actor.builder()
+                    .name(name)
+                    .slug(slugify.slugify(name))
+                    .avatar("https://placehold.co/600x400?text=" + name.substring(0, 1).toUpperCase())
+                    .bio(faker.lorem().paragraph())
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+            actorRepository.save(actor);
+        }
+    }
+
+    @Test
+    void save_directors() {
+        Faker faker = new Faker();
+        Slugify slugify = Slugify.builder().build();
+        for (int i = 0; i < 30; i++) {
+            String name = faker.name().fullName();
+            Director director = Director.builder()
+                    .name(name)
+                    .slug(slugify.slugify(name))
+                    .avatar("https://placehold.co/600x400?text=" + name.substring(0, 1).toUpperCase())
+                    .bio(faker.lorem().paragraph())
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+            directorRepository.save(director);
+        }
+    }
+
+    @Test
+    void save_countries() {
+        Faker faker = new Faker();
+        Slugify slugify = Slugify.builder().build();
+
+        for (int i = 0; i < 20; i++) {
+            String name = faker.country().name();
+            Country country = Country.builder()
+                    .name(name)
+                    .slug(slugify.slugify(name))
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+            countryRepository.save(country);
+        }
+    }
+
+    @Test
+    void save_users() {
+        Faker faker = new Faker();
+
+        for (int i = 0; i < 50; i++) {
+            String name = faker.name().fullName();
+            User user = User.builder()
+                    .name(name)
+                    .email(faker.internet().emailAddress())
+                    .avatar("https://placehold.co/600x400?text=" + name.substring(0, 1).toUpperCase())
+                    .password("123")
+                    .role(i == 0 || i == 1 ? UserRole.ADMIN : UserRole.USER)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+            userRepository.save(user);
+        }
+    }
+
     @Test
     void save_movies() {
         Faker faker = new Faker();
         Slugify slugify = Slugify.builder().build();
+        Random rd = new Random();
+
+        // Lấy tất cả đối tượng liên quan
+        List<Country> countries = countryRepository.findAll();
+        List<Genre> genres = genreRepository.findAll();
+        List<Actor> actors = actorRepository.findAll();
+        List<Director> directors = directorRepository.findAll();
 
         for (int i = 0; i < 100; i++) {
+            // Random 1 country
+            Country rdCountry = countries.get(rd.nextInt(countries.size()));
+
+            // Random 2 -> 3 genres not duplicate
+            List<Genre> rdGenres = new ArrayList<>();
+            for (int j = 0; j < rd.nextInt(2) + 1; j++) {
+                Genre rdGenre = genres.get(rd.nextInt(genres.size()));
+                if (!rdGenres.contains(rdGenre)) {
+                    rdGenres.add(rdGenre);
+                }
+            }
+
+            // Random 5 -> 7 actors not duplicate
+            List<Actor> rdActors = new ArrayList<>();
+            for (int j = 0; j < rd.nextInt(3) + 5; j++) {
+                Actor rdActor = actors.get(rd.nextInt(actors.size()));
+                if (!rdActors.contains(rdActor)) {
+                    rdActors.add(rdActor);
+                }
+            }
+
+            // Random 1 -> 3 directors not duplicate
+            List<Director> rdDirectors = new ArrayList<>();
+            for (int j = 0; j < rd.nextInt(2) + 1; j++) {
+                Director rdDirector = directors.get(rd.nextInt(directors.size()));
+                if (!rdDirectors.contains(rdDirector)) {
+                    rdDirectors.add(rdDirector);
+                }
+            }
+
+            // Tạo Movie -> Lưu vào trong Database
             String name = faker.book().title();
             Boolean status = faker.bool().bool();
             Movie movie = Movie.builder()
@@ -38,6 +183,10 @@ class MovieAppApplicationTests {
                     .createdAt(LocalDateTime.now())
                     .updatedAt(LocalDateTime.now())
                     .publishedAt(status ? LocalDateTime.now() : null)
+                    .country(rdCountry)
+                    .genres(rdGenres)
+                    .actors(rdActors)
+                    .directors(rdDirectors)
                     .build();
             movieRepository.save(movie);
         }
