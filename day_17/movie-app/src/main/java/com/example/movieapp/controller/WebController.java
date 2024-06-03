@@ -68,6 +68,11 @@ public class WebController {
     public String getMovieDetailsPage(@PathVariable Integer id,
                                       @PathVariable String slug,
                                       Model model) {
+        Movie movie = webService.getMovieDetails(id, slug);
+        List<Movie> relatedMovies = webService.getRelatedMovies(movie);
+
+        model.addAttribute("movie", movie);
+        model.addAttribute("relatedMovies", relatedMovies);
         return "web/chi-tiet-phim";
     }
 }

@@ -4,11 +4,10 @@ import com.example.movieapp.entity.Movie;
 import com.example.movieapp.model.enums.MovieType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
 //    // Normal query methods
@@ -47,4 +46,9 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
     // Select * from movies where status = ? order by rating desc limit 10
     List<Movie> findTop10ByStatusOrderByRatingDesc(Boolean status);
+
+    Optional<Movie> findByIdAndSlugAndStatus(Integer id, String slug, Boolean status);
+
+    // Phim liên quan
+    List<Movie> findTop6ByTypeAndStatusAndIdNotOrderByRatingDesc(MovieType type, Boolean status, Integer id);
 }

@@ -46,17 +46,19 @@
 <section class="py-4">
     <div class="container">
         <h3 class="text-uppercase mb-3">Phim Hot</h3>
-        <div class="owl-carousel owl-theme">
-            <div th:each="movie : ${dsPhimHot}">
-                <a th:href="@{/phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug})}"
-                   class="text-decoration-none text-dark">
-                    <div class="movie-item">
-                        <div class="movie-poster rounded overflow-hidden">
-                            <img th:src="${movie.poster}" th:alt="${movie.name}">
+        <div class="carousel-wrapper">
+            <div class="owl-carousel owl-theme">
+                <div th:each="movie : ${dsPhimHot}">
+                    <a th:href="@{/phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug})}"
+                       class="text-decoration-none text-dark">
+                        <div class="movie-item">
+                            <div class="movie-poster rounded overflow-hidden">
+                                <img th:src="${movie.poster}" th:alt="${movie.name}">
+                            </div>
+                            <p class="mt-2" th:text="${movie.name}">Truy Tìm Dory</p>
                         </div>
-                        <p class="mt-2" th:text="${movie.name}">Truy Tìm Dory</p>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -190,17 +192,9 @@
         loop: false,
         margin: 24,
         nav: true,
-        responsive: {
-            0: {
-                items: 1
-            },
-            600: {
-                items: 3
-            },
-            1000: {
-                items: 5
-            }
-        }
+        items: 5,
+        dots: false,
+        navText: ["<div class='nav-button owl-prev'>‹</div>", "<div class='nav-button owl-next'>›</div>"],
     })
 </script>
 </body>

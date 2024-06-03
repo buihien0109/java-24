@@ -25,4 +25,13 @@ public class WebService {
     public List<Movie> getHotMovie() {
         return movieRepository.findTop10ByStatusOrderByRatingDesc(true);
     }
+
+    public Movie getMovieDetails(Integer id, String slug) {
+        return movieRepository.findByIdAndSlugAndStatus(id, slug, true).orElse(null);
+    }
+
+    public List<Movie> getRelatedMovies(Movie movie) {
+        return movieRepository
+                .findTop6ByTypeAndStatusAndIdNotOrderByRatingDesc(movie.getType(), true, movie.getId());
+    }
 }
