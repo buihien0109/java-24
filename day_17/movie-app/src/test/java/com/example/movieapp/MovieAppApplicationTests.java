@@ -34,6 +34,8 @@ class MovieAppApplicationTests {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EpisodeRepository episodeRepository;
 
     @Test
     void save_genres() {
@@ -190,6 +192,49 @@ class MovieAppApplicationTests {
                     .build();
             movieRepository.save(movie);
         }
+    }
+
+    @Test
+    void save_episodes() {
+        Random rd = new Random();
+        List<Movie> movies = movieRepository.findAll();
+
+        for (Movie movie : movies) {
+            if (movie.getType().equals(MovieType.PHIM_BO)) { // Tạo nhiều tập phim
+                // Tạo 5 -> 10 tập phim
+                for (int i = 0; i < rd.nextInt(6) + 5; i++) {
+                    Episode episode = Episode.builder()
+                            .name("Tập " + (i + 1))
+                            .duration(50)
+                            .videoUrl("https://videos.pexels.com/video-files/3209828/3209828-hd_1280_720_25fps.mp4")
+                            .displayOrder(i + 1)
+                            .status(true)
+                            .createdAt(LocalDateTime.now())
+                            .updatedAt(LocalDateTime.now())
+                            .publishedAt(LocalDateTime.now())
+                            .movie(movie)
+                            .build();
+                    episodeRepository.save(episode);
+                }
+            } else { // Tạo 1 tập phim
+                Episode episode = Episode.builder()
+                        .name("Tập full")
+                        .duration(90)
+                        .videoUrl("https://videos.pexels.com/video-files/3209828/3209828-hd_1280_720_25fps.mp4")
+                        .displayOrder(1)
+                        .status(true)
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .publishedAt(LocalDateTime.now())
+                        .movie(movie)
+                        .build();
+                episodeRepository.save(episode);
+            }
+        }
+    }
+
+    @Test
+    void save_reviews() {
     }
 
     @Test
