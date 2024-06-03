@@ -36,6 +36,8 @@ class MovieAppApplicationTests {
     private UserRepository userRepository;
     @Autowired
     private EpisodeRepository episodeRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @Test
     void save_genres() {
@@ -235,6 +237,26 @@ class MovieAppApplicationTests {
 
     @Test
     void save_reviews() {
+        Random rd = new Random();
+        Faker faker = new Faker();
+        List<Movie> movies = movieRepository.findAll();
+        List<User> users = userRepository.findAll();
+
+        for (Movie movie : movies) {
+            // Random 5 -> 10 reviews
+            for (int i = 0; i < rd.nextInt(6) + 5; i++) {
+                User rdUser = users.get(rd.nextInt(users.size()));
+                Review review = Review.builder()
+                        .content(faker.lorem().paragraph())
+                        .rating(rd.nextInt(6) + 5)
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .movie(movie)
+                        .user(rdUser)
+                        .build();
+                reviewRepository.save(review);
+            }
+        }
     }
 
     @Test
