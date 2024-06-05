@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${movie.name}">Bootstrap demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/web-assets/css/style.css}">
@@ -15,7 +18,7 @@
     <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img class="logo" src="https://motchillj.com/motchill.png?v1.0.2" alt="logo">
+                <img class="logo" src="/web-assets/image/logo.png" alt="logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
@@ -38,7 +41,23 @@
 
 <section class="py-4">
     <div class="container">
-        <div class="row">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-primary" href="/">Trang chủ</a></li>
+                <li class="breadcrumb-item">
+                    <a th:switch="${movie.type.toString()}">
+                        <a class="text-primary" th:case="PHIM_LE" href="/phim-le">Phim lẻ</a>
+                        <a class="text-primary" th:case="PHIM_BO" href="/phim-bo">Phim bộ</a>
+                        <a class="text-primary" th:case="PHIM_CHIEU_RAP" href="/phim-chieu-rap">Phim chiếu rạp</a>
+                        <a class="text-primary" th:case="*" href="#">Không xác định</a> <!-- Trường hợp mặc định -->
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${movie.name}">Đầu Gấu Đụng Đầu Đất
+                </li>
+            </ol>
+        </nav>
+
+        <div class="row mt-4">
             <div class="col-3">
                 <div class="movie-poster rounded overflow-hidden" style="height: 350px;">
                     <img th:src="${movie.poster}" th:alt="${movie.name}">
@@ -47,31 +66,60 @@
             <div class="col-9">
                 <h4 class="mb-2" th:text="${movie.name}">Truy Tìm Dory</h4>
                 <div class="bg-body-tertiary p-4 rounded">
-                    <p class="mb-2">Thể loại: Hoạt hình, Phiêu lưu, Hài hước</p>
-                    <p class="mb-2">Năm phát hành: <th:block th:text="${movie.releaseYear}"></th:block></p>
-                    <p class="mb-2">Quốc gia: Mỹ</p>
-                    <p class="mb-2">Đạo diễn: Andrew Stanton, Angus MacLane</p>
-                    <p class="mb-2">Diễn viên: Ellen DeGeneres, Albert Brooks, Ed O'Neill</p>
-                    <p class="mb-2">Mô tả: <th:block th:text="${movie.description}"></th:block></p>
+                    <p class="mb-2">Thể loại:
+                        <th:block th:each="genre, iterStat : ${movie.genres}">
+                            <th:block th:text="${genre.name}"></th:block>
+                            <th:block th:if="${!iterStat.last}">,</th:block>
+                        </th:block>
+                    </p>
+                    <p class="mb-2">Năm phát hành:
+                        <th:block th:text="${movie.releaseYear}"></th:block>
+                    </p>
+                    <p class="mb-2">Quốc gia:
+                        <th:block th:text="${movie.country.name}"></th:block>
+                    </p>
+                    <p class="mb-2">Đạo diễn:
+                        <th:block th:each="director, iterStat : ${movie.directors}">
+                            <th:block th:text="${director.name}"></th:block>
+                            <th:block th:if="${!iterStat.last}">,</th:block>
+                        </th:block>
+                    </p>
+                    <p class="mb-2">Diễn viên:
+                        <th:block th:each="actor, iterStat : ${movie.actors}">
+                            <th:block th:text="${actor.name}"></th:block>
+                            <th:block th:if="${!iterStat.last}">,</th:block>
+                        </th:block>
+                    </p>
+                    <p class="mb-2">Mô tả:
+                        <th:block th:text="${movie.description}"></th:block>
+                    </p>
 
-                    <button class="btn btn-danger px-5">Xem phim</button>
+                    <th:block th:if="${movie.type.toString() == 'PHIM_BO' && episodes.size() > 0}">
+                        <a class="btn btn-danger px-5"
+                           th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episodes.get(0).displayOrder})}">
+                            Xem phim</a>
+                    </th:block>
+
+                    <th:block
+                            th:if="${(movie.type.toString() == 'PHIM_LE' || movie.type.toString() == 'PHIM_CHIEU_RAP') && episodes.size() > 0}">
+                        <a class="btn btn-danger px-5"
+                           th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap='full')}">
+                            Xem phim</a>
+                    </th:block>
+
                     <button class="btn btn-dark px-5">Thêm vào yêu thích</button>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <h3 class="text-uppercase mt-4 mb-3">Danh sách tập phim</h3>
+        <div class="row" th:if="${movie.type.toString() == 'PHIM_BO' && episodes.size() > 0}">
+            <h4 class="text-uppercase mt-4 mb-3">Danh sách tập phim</h4>
             <div>
-                <button class="btn btn-dark">Tập 1</button>
-                <button class="btn btn-dark">Tập 2</button>
-                <button class="btn btn-dark">Tập 3</button>
-                <button class="btn btn-dark">Tập 4</button>
-                <button class="btn btn-dark">Tập 5</button>
-                <button class="btn btn-dark">Tập 6</button>
-                <button class="btn btn-dark">Tập 7</button>
-                <button class="btn btn-dark">Tập 8</button>
-                <button class="btn btn-dark">Tập 9</button>
+                <a class="btn btn-dark me-2"
+                   th:each="episode : ${episodes}"
+                   th:text="${episode.name}"
+                   th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episode.displayOrder})}">
+                    >Tập 1</a>
             </div>
         </div>
     </div>
@@ -79,7 +127,7 @@
 
 <section class="py-4 bg-body-tertiary">
     <div class="container">
-        <h3 class="text-uppercase mb-3">Phim đề xuất</h3>
+        <h4 class="text-uppercase mb-3">Phim đề xuất</h4>
         <div class="row">
             <div class="col-2" th:each="movie : ${relatedMovies}">
                 <a th:href="@{/phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug})}"
@@ -98,89 +146,33 @@
 
 <section class="py-4">
     <div class="container">
-        <h3 class="text-uppercase mb-3">Bình luận</h3>
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="text-uppercase mb-3">Bình luận</h4>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalReview">
+                Viết bình luận
+            </button>
+        </div>
+        <p>Vui lòng <a href="/dang-nhap" class="text-decoration-underline">đăng nhập</a> để viết bình luận.</p>
 
         <div class="review-list">
-            <div class="review-item d-flex mb-3">
+            <div class="review-item d-flex mb-4" th:each="review : ${reviews}">
                 <div class="review-avatar">
-                    <img src="https://i.mpcdn.top/poster/truy-tim-dory-564.jpg?1716456921" alt="">
+                    <img th:src="${review.user.avatar}" th:alt="${review.user.name}">
                 </div>
 
                 <div class="review-info ps-3">
                     <p class="mb-0">
-                        <span class="fw-bold">Bùi Hiên</span>
-                        <span class="fst-italic text-muted">(26/05/2024)</span>
+                        <span class="fw-bold" th:text="${review.user.name}">Bùi Hiên</span>
+                        <span class="fst-italic text-muted">
+                            (<th:block th:text="${#temporals.format(review.createdAt, 'dd/MM/yyyy')}"></th:block>)
+                        </span>
                     </p>
-                    <p class="mb-0">4 <span class="text-warning">💛</span></p>
-                    <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla porro impedit
-                        molestias labore esse fugit corporis quisquam alias dolor natus, et est reiciendis quam modi.
-                        Maxime quis a omnis nemo ea aperiam, corrupti vitae id maiores nisi asperiores tempore quas
-                        reiciendis optio impedit quasi ad laudantium nobis eum mollitia animi!</p>
-                </div>
-            </div>
-            <div class="review-item d-flex mb-3">
-                <div class="review-avatar">
-                    <img src="https://i.mpcdn.top/poster/truy-tim-dory-564.jpg?1716456921" alt="">
-                </div>
-
-                <div class="review-info ps-3">
-                    <p class="mb-0">
-                        <span class="fw-bold">Bùi Hiên</span>
-                        <span class="fst-italic text-muted">(26/05/2024)</span>
+                    <p class="mb-0 fw-bold">
+                        <th:block th:text="${review.rating}"></th:block>
+                        <span class="text-warning"><i class="fa fa-star"></i></span>
                     </p>
-                    <p class="mb-0">4 <span class="text-warning">💛</span></p>
-                    <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla porro impedit
-                        molestias labore esse fugit corporis quisquam alias dolor natus, et est reiciendis quam modi.
-                        Maxime quis a omnis nemo ea aperiam, corrupti vitae id maiores nisi asperiores tempore quas
-                        reiciendis optio impedit quasi ad laudantium nobis eum mollitia animi!</p>
-                </div>
-            </div>
-            <div class="review-item d-flex mb-3">
-                <div class="review-avatar">
-                    <img src="https://i.mpcdn.top/poster/truy-tim-dory-564.jpg?1716456921" alt="">
-                </div>
-
-                <div class="review-info ps-3">
-                    <p class="mb-0">
-                        <span class="fw-bold">Bùi Hiên</span>
-                        <span class="fst-italic text-muted">(26/05/2024)</span>
-                    </p>
-                    <p class="mb-0">4 <span class="text-warning">💛</span></p>
-                    <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla porro impedit
-                        molestias labore esse fugit corporis quisquam alias dolor natus, et est reiciendis quam modi.
-                        Maxime quis a omnis nemo ea aperiam, corrupti vitae id maiores nisi asperiores tempore quas
-                        reiciendis optio impedit quasi ad laudantium nobis eum mollitia animi!</p>
-                </div>
-            </div>
-            <div class="review-item d-flex mb-3">
-                <div class="review-avatar">
-                    <img src="https://i.mpcdn.top/poster/truy-tim-dory-564.jpg?1716456921" alt="">
-                </div>
-
-                <div class="review-info ps-3">
-                    <p class="mb-0">
-                        <span class="fw-bold">Bùi Hiên</span>
-                        <span class="fst-italic text-muted">(26/05/2024)</span>
-                    </p>
-                    <p class="mb-0">4 <span class="text-warning">💛</span></p>
-                    <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla porro impedit
-                        molestias labore esse fugit corporis quisquam alias dolor natus, et est reiciendis quam modi.
-                        Maxime quis a omnis nemo ea aperiam, corrupti vitae id maiores nisi asperiores tempore quas
-                        reiciendis optio impedit quasi ad laudantium nobis eum mollitia animi!</p>
-                </div>
-            </div>
-            <div class="review-item d-flex mb-3">
-                <div class="review-avatar">
-                    <img src="https://i.mpcdn.top/poster/truy-tim-dory-564.jpg?1716456921" alt="">
-                </div>
-
-                <div class="review-info ps-3">
-                    <p class="mb-0">
-                        <span class="fw-bold">Bùi Hiên</span>
-                        <span class="fst-italic text-muted">(26/05/2024)</span>
-                    </p>
-                    <p class="mb-0">4 <span class="text-warning">💛</span></p>
-                    <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla porro impedit
+                    <p class="mb-0" th:text="${review.content}">Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit. Nulla porro impedit
                         molestias labore esse fugit corporis quisquam alias dolor natus, et est reiciendis quam modi.
                         Maxime quis a omnis nemo ea aperiam, corrupti vitae id maiores nisi asperiores tempore quas
                         reiciendis optio impedit quasi ad laudantium nobis eum mollitia animi!</p>
@@ -190,11 +182,69 @@
     </div>
 </section>
 
+<!-- Modal -->
+<div class="modal fade" id="modalReview" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Tạo bình luận</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column justify-content-center align-items-center mb-3">
+                    <div class="rating">
+                        <span class="star" data-rating="1">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="2">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="3">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="4">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="5">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="6">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="7">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="8">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="9">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                        <span class="star" data-rating="10">
+                           <i class="fa-solid fa-star"></i>
+                        </span>
+                    </div>
+                    <div id="rating-value">Vui lòng chọn đánh giá</div>
+                </div>
+                <form id="form-review">
+                    <div class="mb-3">
+                        <textarea class="form-control" id="review-content" rows="5"></textarea>
+                    </div>
+                    <div class="mb-3 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">Tạo bình luận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer class="bg-dark py-4">
     <div class="container">
         <div class="row">
             <div class="col-4">
-                <img class="logo" src="https://motchillj.com/motchill.png?v1.0.2" alt="logo">
+                <img class="logo" src="/web-assets/image/logo.png" alt="logo">
                 <p class="text-white mb-0 mt-3">Xem phim online miễn phí chất lượng cao với phụ đề tiếng việt -
                     thuyết minh - lồng tiếng. Mọt phim - Mot chill có nhiều thể loại phim phong phú, đặc sắc, nhiều
                     bộ phim hay nhất - mới nhất.</p>
@@ -240,6 +290,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+<script src="/web-assets/js/movie-review.js"></script>
 </body>
 
 </html>

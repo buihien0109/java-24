@@ -34,8 +34,10 @@ class MovieAppApplicationTests {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private EpisodeRepository episodeRepository;
+
     @Autowired
     private ReviewRepository reviewRepository;
 

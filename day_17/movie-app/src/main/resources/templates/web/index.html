@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Trang chủ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
@@ -22,7 +25,7 @@
     <nav class="navbar navbar-expand-lg bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img class="logo" src="https://motchillj.com/motchill.png?v1.0.2" alt="logo">
+                <img class="logo" src="/web-assets/image/logo.png" alt="logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
@@ -134,7 +137,7 @@
     <div class="container">
         <div class="row">
             <div class="col-4">
-                <img class="logo" src="https://motchillj.com/motchill.png?v1.0.2" alt="logo">
+                <img class="logo" src="/web-assets/image/logo.png" alt="logo">
                 <p class="text-white mb-0 mt-3">Xem phim online miễn phí chất lượng cao với phụ đề tiếng việt - thuyết
                     minh - lồng tiếng. Mọt phim - Mot chill có nhiều thể loại phim phong phú, đặc sắc, nhiều bộ phim hay
                     nhất - mới nhất.</p>
@@ -194,7 +197,10 @@
         nav: true,
         items: 5,
         dots: false,
-        navText: ["<div class='nav-button owl-prev'>‹</div>", "<div class='nav-button owl-next'>›</div>"],
+        navText: [
+            "<div class='nav-button owl-prev'><i class=\"fa-solid fa-caret-left\"></i></div>",
+            "<div class='nav-button owl-next'><i class=\"fa-solid fa-caret-right\"></i></div>"
+        ],
     })
 </script>
 </body>

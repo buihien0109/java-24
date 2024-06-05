@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+a {
+    text-decoration: none;
+}
+
 img {
     max-width: 100%;
     object-fit: cover;
@@ -23,12 +27,12 @@ img {
 }
 
 .review-avatar {
-    flex: 0 0 80px;
+    flex: 0 0 60px;
 }
 
 .review-avatar img {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
 }
 
@@ -80,7 +84,7 @@ img {
 
 .owl-theme .owl-nav [class*=owl-] {
     color: #ffffff;
-    font-size: 39px;
+    font-size: 24px;
     background: #000000;
     border-radius: 3px;
 }
@@ -91,4 +95,19 @@ img {
 
 .owl-carousel .next-carousel:hover {
     background-position: -24px -53px;
+}
+
+.rating {
+    font-size: 20px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.star {
+    display: inline-block;
+}
+
+.star:hover,
+.star.active {
+    color: #EDBB0E;
 }
