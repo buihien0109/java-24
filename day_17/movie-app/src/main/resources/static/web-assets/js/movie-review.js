@@ -36,3 +36,32 @@ function highlightStars(rating) {
         }
     });
 }
+
+const formReviewEl = document.getElementById("form-review")
+const contentEl = document.getElementById("review-content");
+const modalReviewEl = document.getElementById("modalReview");
+
+formReviewEl.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    if (!contentEl.value.trim() || currentRating === 0) {
+        toastr.warning("Please enter content and select a rating.");
+        return;
+    }
+
+    const reviewData = {
+        content: contentEl.value.trim(),
+        rating: currentRating,
+        movieId: movie.id
+    };
+
+    axios.post("/api/reviews", reviewData)
+        .then(response => {
+            console.log(response.data);
+            toastr.success("Review created successfully!");
+        })
+        .catch(error => {
+            console.error(error);
+            toastr.error("There was an error creating the review.");
+        });
+});
