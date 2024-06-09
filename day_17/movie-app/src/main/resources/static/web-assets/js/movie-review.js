@@ -37,9 +37,50 @@ function highlightStars(rating) {
     });
 }
 
+const reviewListEl = document.querySelector(".review-list");
 const formReviewEl = document.getElementById("form-review")
 const contentEl = document.getElementById("review-content");
 const modalReviewEl = document.getElementById("modalReview");
+const modalReviewInstance = new bootstrap.Modal('#modalReview', {
+    keyboard: false
+})
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+
+    const day = ("0" + date.getDate()).slice(-2); // 09 -> 09 , 020 -> 20
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+}
+
+const renderReviews = (reviews) => {
+    let html = "";
+    reviews.forEach((review) => {
+        html += `
+            <div class="review-item d-flex mb-4">
+                <div class="review-avatar">
+                    <img src=${review.user.avatar} alt=${review.user.name}>
+                </div>
+                <div class="review-info ps-3">
+                    <p class="mb-0">
+                        <span class="fw-bold">${review.user.name}</span>
+                        <span class="fst-italic text-muted">
+                            (${formatDate(review.createdAt)})
+                        </span>
+                    </p>
+                    <p class="mb-0 fw-bold">
+                        ${review.rating}
+                        <span class="text-warning"><i class="fa fa-star"></i></span>
+                    </p>
+                    <p class="mb-0">${review.content}</p>
+                </div>
+            </div>
+        `
+    });
+    reviewListEl.innerHTML = html;
+}
 
 formReviewEl.addEventListener("submit", function(event) {
     event.preventDefault();
@@ -57,8 +98,12 @@ formReviewEl.addEventListener("submit", function(event) {
 
     axios.post("/api/reviews", reviewData)
         .then(response => {
-            console.log(response.data);
             toastr.success("Review created successfully!");
+
+            reviews.unshift(response.data);
+            renderReviews(reviews);
+
+            modalReviewInstance.hide();
         })
         .catch(error => {
             console.error(error);
