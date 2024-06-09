@@ -45,6 +45,13 @@ const modalReviewInstance = new bootstrap.Modal('#modalReview', {
     keyboard: false
 })
 
+modalReviewEl.addEventListener('hidden.bs.modal', event => {
+    currentRating = 0;
+    resetStars();
+    ratingValue.textContent = "Vui lòng chọn đánh giá";
+    contentEl.value = "";
+})
+
 function formatDate(dateString) {
     const date = new Date(dateString);
 
@@ -75,6 +82,13 @@ const renderReviews = (reviews) => {
                         <span class="text-warning"><i class="fa fa-star"></i></span>
                     </p>
                     <p class="mb-0">${review.content}</p>
+                    <div>
+                        <button class="text-primary border-0 bg-transparent text-decoration-underline me-1">Sửa</button>
+                        <button
+                                onclick="deleteReview(${review.id})"
+                                class="text-danger border-0 bg-transparent text-decoration-underline me-1">Xóa
+                        </button>
+                    </div>
                 </div>
             </div>
         `
@@ -110,3 +124,24 @@ formReviewEl.addEventListener("submit", function(event) {
             toastr.error("There was an error creating the review.");
         });
 });
+
+const deleteReview = (id) => {
+    const isConfirm = window.confirm("Bạn có chắc chắn muốn xóa đánh giá này không?");
+    if(!isConfirm) return;
+
+    axios.delete(`/api/reviews/${id}`)
+        .then(res => {
+            toastr.success("Xóa đánh giá thành công!");
+
+            // Xóa trong mảng ban đầu
+            const index = reviews.findIndex(review => review.id === id);
+            reviews.splice(index, 1);
+
+            // Render lại giao diện
+            renderReviews(reviews);
+        })
+        .catch(err => {
+            console.error(err);
+            toastr.error(err.response.data.message);
+        })
+}
