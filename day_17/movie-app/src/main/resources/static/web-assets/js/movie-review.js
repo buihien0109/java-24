@@ -44,12 +44,27 @@ const modalReviewEl = document.getElementById("modalReview");
 const modalReviewInstance = new bootstrap.Modal('#modalReview', {
     keyboard: false
 })
+let updatedId = null;
+
+modalReviewEl.addEventListener('show.bs.modal', event => {
+    const modalTitle = document.querySelector("#modalReview .modal-title");
+    const formBtn = document.querySelector("#form-review button[type='submit']");
+
+    if (updatedId) {
+        modalTitle.textContent = "Cập nhật bình luận";
+        formBtn.textContent = "Cập nhật";
+    } else {
+        modalTitle.textContent = "Tạo bình luận";
+        formBtn.textContent = "Tạo bình luận";
+    }
+})
 
 modalReviewEl.addEventListener('hidden.bs.modal', event => {
     currentRating = 0;
     resetStars();
     ratingValue.textContent = "Vui lòng chọn đánh giá";
     contentEl.value = "";
+    updatedId = null;
 })
 
 function formatDate(dateString) {
@@ -83,10 +98,12 @@ const renderReviews = (reviews) => {
                     </p>
                     <p class="mb-0">${review.content}</p>
                     <div>
-                        <button class="text-primary border-0 bg-transparent text-decoration-underline me-1">Sửa</button>
+                        <button 
+                            onclick="openModalReviewUpdate(${review.id})"
+                            class="text-primary border-0 bg-transparent text-decoration-underline me-1">Sửa</button>
                         <button
-                                onclick="deleteReview(${review.id})"
-                                class="text-danger border-0 bg-transparent text-decoration-underline me-1">Xóa
+                            onclick="deleteReview(${review.id})"
+                            class="text-danger border-0 bg-transparent text-decoration-underline me-1">Xóa
                         </button>
                     </div>
                 </div>
@@ -96,7 +113,7 @@ const renderReviews = (reviews) => {
     reviewListEl.innerHTML = html;
 }
 
-formReviewEl.addEventListener("submit", function(event) {
+formReviewEl.addEventListener("submit", function (event) {
     event.preventDefault();
 
     if (!contentEl.value.trim() || currentRating === 0) {
@@ -104,6 +121,14 @@ formReviewEl.addEventListener("submit", function(event) {
         return;
     }
 
+    if (updatedId) {
+        updateReview();
+    } else {
+        createReview();
+    }
+});
+
+const createReview = () => {
     const reviewData = {
         content: contentEl.value.trim(),
         rating: currentRating,
@@ -112,7 +137,7 @@ formReviewEl.addEventListener("submit", function(event) {
 
     axios.post("/api/reviews", reviewData)
         .then(response => {
-            toastr.success("Review created successfully!");
+            toastr.success("Tạo mới đánh giá thành công!");
 
             reviews.unshift(response.data);
             renderReviews(reviews);
@@ -123,11 +148,36 @@ formReviewEl.addEventListener("submit", function(event) {
             console.error(error);
             toastr.error("There was an error creating the review.");
         });
-});
+}
+
+const updateReview = () => {
+    const reviewData = {
+        content: contentEl.value.trim(),
+        rating: currentRating
+    };
+
+    axios.put(`/api/reviews/${updatedId}`, reviewData)
+        .then(response => {
+            toastr.success("Cập nhật đánh giá thành công!");
+
+            // Tìm kiếm thông tin review cần cập nhật
+            const review = reviews.find(review => review.id === updatedId);
+            review.content = response.data.content;
+            review.rating = response.data.rating;
+
+            renderReviews(reviews);
+
+            modalReviewInstance.hide();
+        })
+        .catch(error => {
+            console.error(error);
+            toastr.error("There was an error creating the review.");
+        });
+}
 
 const deleteReview = (id) => {
     const isConfirm = window.confirm("Bạn có chắc chắn muốn xóa đánh giá này không?");
-    if(!isConfirm) return;
+    if (!isConfirm) return;
 
     axios.delete(`/api/reviews/${id}`)
         .then(res => {
@@ -144,4 +194,18 @@ const deleteReview = (id) => {
             console.error(err);
             toastr.error(err.response.data.message);
         })
+}
+
+const openModalReviewUpdate = (id) => {
+    updatedId = id; // Lưu lại id review cần cập nhật
+    modalReviewInstance.show(); // Hiển thị modal
+
+    // Tìm kiếm thông tin review cần cập nhật
+    const review = reviews.find(review => review.id === id);
+
+    // Hiển thị thông tin review lên form
+    currentRating = review.rating;
+    ratingValue.textContent = `Bạn đã đánh giá ${currentRating} sao.`;
+    highlightStars(currentRating);
+    contentEl.value = review.content;
 }

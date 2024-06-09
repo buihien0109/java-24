@@ -177,7 +177,9 @@
                     <p class="mb-0" th:text="${review.content}">Lorem ipsum dolor sit amet</p>
 
                     <div>
-                        <button class="text-primary border-0 bg-transparent text-decoration-underline me-1">Sửa</button>
+                        <button
+                                th:onclick="|openModalReviewUpdate(${review.id})|"
+                                class="text-primary border-0 bg-transparent text-decoration-underline me-1">Sửa</button>
                         <button
                                 th:onclick="|deleteReview(${review.id})|"
                                 class="text-danger border-0 bg-transparent text-decoration-underline me-1">Xóa
