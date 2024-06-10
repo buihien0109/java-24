@@ -113,6 +113,18 @@ const renderReviews = (reviews) => {
     reviewListEl.innerHTML = html;
 }
 
+const render = reviews => {
+    $('#pagination').pagination({
+        dataSource: reviews,
+        pageSize: 5,
+        hideOnlyOnePage: true,
+        className: 'paginationjs-big',
+        callback: function (data, pagination) {
+            renderReviews(data);
+        }
+    })
+}
+
 formReviewEl.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -140,7 +152,7 @@ const createReview = () => {
             toastr.success("Tạo mới đánh giá thành công!");
 
             reviews.unshift(response.data);
-            renderReviews(reviews);
+            render(reviews);
 
             modalReviewInstance.hide();
         })
@@ -165,7 +177,7 @@ const updateReview = () => {
             review.content = response.data.content;
             review.rating = response.data.rating;
 
-            renderReviews(reviews);
+            render(reviews);
 
             modalReviewInstance.hide();
         })
@@ -188,7 +200,7 @@ const deleteReview = (id) => {
             reviews.splice(index, 1);
 
             // Render lại giao diện
-            renderReviews(reviews);
+            render(reviews);
         })
         .catch(err => {
             console.error(err);
@@ -209,3 +221,5 @@ const openModalReviewUpdate = (id) => {
     highlightStars(currentRating);
     contentEl.value = review.content;
 }
+
+render(reviews);

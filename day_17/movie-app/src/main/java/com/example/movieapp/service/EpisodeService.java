@@ -15,4 +15,11 @@ public class EpisodeService {
     public List<Episode> getEpisodeListOfMovie(Integer movieId) {
         return episodeRepository.findByMovie_IdAndStatusOrderByDisplayOrderAsc(movieId, true);
     }
+
+    public Episode getEpisodeByDisplayOrder(Integer movieId, String tap) {
+        Integer covertTap = tap.equals("full") ? 1 : Integer.parseInt(tap);
+        return episodeRepository
+                .findByMovie_IdAndStatusAndDisplayOrder(movieId, true, covertTap)
+                .orElse(null);
+    }
 }

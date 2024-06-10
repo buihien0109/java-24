@@ -92,4 +92,39 @@ public class WebController {
         model.addAttribute("episodes", episodes);
         return "web/chi-tiet-phim";
     }
+
+    // http://localhost:8080/xem-phim/99/the-torment-of-others?tap=full
+    // http://localhost:8080/xem-phim/99/the-torment-of-others?tap=1
+    @GetMapping("/xem-phim/{id}/{slug}")
+    public String getMovieStreamingDetailsPage(@PathVariable Integer id,
+                                               @PathVariable String slug,
+                                               @RequestParam String tap,
+                                               Model model) {
+        // Trả về thông tin phim
+        Movie movie = webService.getMovieDetails(id, slug);
+
+        // Trả về danh sách phim liên quan
+        List<Movie> relatedMovies = webService.getRelatedMovies(movie);
+
+        // Trả về danh sách tập phim
+        List<Episode> episodes = episodeService.getEpisodeListOfMovie(id);
+
+        // Trả về danh sách review
+        List<Review> reviews = reviewService.getReviewsByMovie(id);
+
+        // Lấy ra thông tin tập phim cần xem (tap : displayOrder)
+        Episode currentEpisode = episodeService.getEpisodeByDisplayOrder(id, tap);
+
+        model.addAttribute("movie", movie);
+        model.addAttribute("relatedMovies", relatedMovies);
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("episodes", episodes);
+        model.addAttribute("currentEpisode", currentEpisode);
+        return "web/xem-phim";
+    }
+
+    @GetMapping("/dang-nhap")
+    public String getLoginPage() {
+        return "web/dang-nhap";
+    }
 }

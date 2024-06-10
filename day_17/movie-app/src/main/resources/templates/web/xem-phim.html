@@ -52,7 +52,9 @@
     <div class="container">
         <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="text-primary" href="/">Trang chủ</a></li>
+                <li class="breadcrumb-item">
+                    <a class="text-primary" href="/">Trang chủ</a>
+                </li>
                 <li class="breadcrumb-item">
                     <a th:switch="${movie.type.toString()}">
                         <a class="text-primary" th:case="PHIM_LE" href="/phim-le">Phim lẻ</a>
@@ -61,10 +63,24 @@
                         <a class="text-primary" th:case="*" href="#">Không xác định</a> <!-- Trường hợp mặc định -->
                     </a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page" th:text="${movie.name}">Đầu Gấu Đụng Đầu Đất
+                <li class="breadcrumb-item">
+                    <a class="text-primary"
+                       th:href="@{/phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug})}"
+                       th:text="${movie.name}">Trang chủ</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Xem phim
                 </li>
             </ol>
         </nav>
+
+        <div class="row">
+            <div class="col-12">
+                <video width="100%" controls>
+                    <source th:src="${currentEpisode.videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
 
         <div class="row mt-4">
             <div class="col-3">
@@ -103,19 +119,6 @@
                         <th:block th:text="${movie.description}"></th:block>
                     </p>
 
-                    <th:block th:if="${movie.type.toString() == 'PHIM_BO' && episodes.size() > 0}">
-                        <a class="btn btn-danger px-5"
-                           th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episodes.get(0).displayOrder})}">
-                            Xem phim</a>
-                    </th:block>
-
-                    <th:block
-                            th:if="${(movie.type.toString() == 'PHIM_LE' || movie.type.toString() == 'PHIM_CHIEU_RAP') && episodes.size() > 0}">
-                        <a class="btn btn-danger px-5"
-                           th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap='full')}">
-                            Xem phim</a>
-                    </th:block>
-
                     <button class="btn btn-dark px-5">Thêm vào yêu thích</button>
                 </div>
             </div>
@@ -124,8 +127,9 @@
         <div class="row" th:if="${movie.type.toString() == 'PHIM_BO' && episodes.size() > 0}">
             <h4 class="text-uppercase mt-4 mb-3">Danh sách tập phim</h4>
             <div>
-                <a class="btn btn-dark me-2"
+                <a class="btn me-2"
                    th:each="episode : ${episodes}"
+                   th:classappend="${currentEpisode.displayOrder == episode.displayOrder ? 'btn-danger' : 'btn-dark'}"
                    th:text="${episode.name}"
                    th:href="@{/xem-phim/{id}/{slug} (id=${movie.id}, slug=${movie.slug}, tap=${episode.displayOrder})}">
                     >Tập 1</a>
