@@ -140,7 +140,9 @@
                             Xem phim</a>
                     </th:block>
 
-                    <button th:if="${session.currentUser != null}" class="btn btn-dark px-5">Thêm vào yêu thích</button>
+                    <button th:if="${session.currentUser != null}" class="btn btn-dark px-5" id="btn-favorite">
+                        <th:block th:text="${isFavorite ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}"></th:block>
+                    </button>
                 </div>
             </div>
         </div>
@@ -181,11 +183,13 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="text-uppercase mb-3">Bình luận</h4>
-            <button th:if="${session.currentUser != null}" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalReview">
+            <button th:if="${session.currentUser != null}" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#modalReview">
                 Viết bình luận
             </button>
         </div>
-        <p th:if="${session.currentUser == null}">Vui lòng <a href="/dang-nhap" class="text-decoration-underline">đăng nhập</a> để viết bình luận.</p>
+        <p th:if="${session.currentUser == null}">Vui lòng <a href="/dang-nhap" class="text-decoration-underline">đăng
+            nhập</a> để viết bình luận.</p>
 
         <div class="review-list">
             <!--            <div class="review-item d-flex mb-4" th:each="review : ${reviews}">-->
@@ -345,8 +349,10 @@
 <script th:inline="javascript">
     const movie = [[${movie}]];
     const reviews = [[${reviews}]];
+    let isFavorite = [[${isFavorite}]];
 </script>
 <script src="/web-assets/js/movie-review.js"></script>
+<script th:if="${session.currentUser != null}" src="/web-assets/js/movie-favorite.js"></script>
 
 </body>
 

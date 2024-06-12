@@ -3,10 +3,13 @@ package com.example.movieapp.controller;
 import com.example.movieapp.entity.Episode;
 import com.example.movieapp.entity.Movie;
 import com.example.movieapp.entity.Review;
+import com.example.movieapp.entity.User;
 import com.example.movieapp.model.enums.MovieType;
 import com.example.movieapp.service.EpisodeService;
+import com.example.movieapp.service.FavoriteService;
 import com.example.movieapp.service.ReviewService;
 import com.example.movieapp.service.WebService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -23,6 +26,8 @@ public class WebController {
     private final WebService webService;
     private final EpisodeService episodeService;
     private final ReviewService reviewService;
+    private final FavoriteService favoriteService;
+    private final HttpSession session;
 
     @GetMapping
     public String getHomePage(Model model) {
@@ -74,17 +79,20 @@ public class WebController {
     public String getMovieDetailsPage(@PathVariable Integer id,
                                       @PathVariable String slug,
                                       Model model) {
+        User user = (User) session.getAttribute("currentUser");
         // Trả về thông tin phim
         Movie movie = webService.getMovieDetails(id, slug);
-
         // Trả về danh sách phim liên quan
         List<Movie> relatedMovies = webService.getRelatedMovies(movie);
-
         // Trả về danh sách tập phim
         List<Episode> episodes = episodeService.getEpisodeListOfMovie(id);
-
         // Trả về danh sách review
         List<Review> reviews = reviewService.getReviewsByMovie(id);
+
+        if (user != null) {
+            boolean isFavorite = favoriteService.isFavorite(id);
+            model.addAttribute("isFavorite", isFavorite);
+        }
 
         model.addAttribute("movie", movie);
         model.addAttribute("relatedMovies", relatedMovies);
@@ -121,6 +129,11 @@ public class WebController {
         model.addAttribute("episodes", episodes);
         model.addAttribute("currentEpisode", currentEpisode);
         return "web/xem-phim";
+    }
+
+    @GetMapping("/phim-yeu-thich")
+    public String getFavoritePage(Model model) {
+        return "web/phim-yeu-thich";
     }
 
     @GetMapping("/dang-nhap")
