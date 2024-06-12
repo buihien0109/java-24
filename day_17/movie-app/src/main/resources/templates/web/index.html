@@ -42,7 +42,31 @@
                     <a class="nav-link text-white" href="#">Thể loại</a>
                 </div>
                 <div>
-                    <a class="text-white" href="/dang-nhap">Đăng nhập</a>
+                    <a th:if="${session.currentUser == null}" class="text-white" href="/dang-nhap">Đăng nhập</a>
+
+                    <div class="dropdown" th:if="${session.currentUser != null}">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false" th:text="${session.currentUser.name}">
+                            Bui Hien
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li th:if="${session.currentUser.role.toString() == 'ADMIN'}">
+                                <a class="dropdown-item" href="/admin">Trang quản trị</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/thong-tin-ca-nhan">Thông tin cá nhân</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/phim-yeu-thich">Phim yêu thích</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/lich-su-xem-phim">Lịch sử xem phim</a>
+                            </li>
+                            <li>
+                                <span class="dropdown-item" style="cursor: pointer">Đăng xuất</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
