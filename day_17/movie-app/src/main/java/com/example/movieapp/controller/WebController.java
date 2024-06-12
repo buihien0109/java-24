@@ -1,9 +1,6 @@
 package com.example.movieapp.controller;
 
-import com.example.movieapp.entity.Episode;
-import com.example.movieapp.entity.Movie;
-import com.example.movieapp.entity.Review;
-import com.example.movieapp.entity.User;
+import com.example.movieapp.entity.*;
 import com.example.movieapp.model.enums.MovieType;
 import com.example.movieapp.service.EpisodeService;
 import com.example.movieapp.service.FavoriteService;
@@ -133,6 +130,8 @@ public class WebController {
 
     @GetMapping("/phim-yeu-thich")
     public String getFavoritePage(Model model) {
+        List<Favorite> favorites = favoriteService.getAllFavoritesByCurrentUser();
+        model.addAttribute("favorites", favorites);
         return "web/phim-yeu-thich";
     }
 
