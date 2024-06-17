@@ -115,3 +115,11 @@ img {
 #form-login {
     width: 500px;
 }
+
+.btn-remove-favorite {
+    position: absolute;
+    right: -12px;
+    top: -16px;
+    font-size: 24px;
+    color: red;
+}
