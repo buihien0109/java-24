@@ -139,4 +139,11 @@ public class WebController {
     public String getLoginPage() {
         return "web/dang-nhap";
     }
+
+    @GetMapping("/thong-tin-ca-nhan")
+    public String getProfilePage(Model model) {
+        User user = (User) session.getAttribute("currentUser");
+        model.addAttribute("user", user);
+        return "web/thong-tin-ca-nhan";
+    }
 }
