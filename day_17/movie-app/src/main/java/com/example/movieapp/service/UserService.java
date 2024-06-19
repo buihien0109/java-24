@@ -1,6 +1,8 @@
 package com.example.movieapp.service;
 
 import com.example.movieapp.entity.User;
+import com.example.movieapp.exception.BadRequestException;
+import com.example.movieapp.model.request.CreateUserRequest;
 import com.example.movieapp.model.request.UpdatePasswordRequest;
 import com.example.movieapp.model.request.UpdateProfileUserRequest;
 import com.example.movieapp.repository.UserRepository;
@@ -10,7 +12,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,5 +53,23 @@ public class UserService {
 
     public User getUserById(Integer id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    public User createUser(CreateUserRequest request) {
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
+        if (userOptional.isPresent()) {
+            throw new BadRequestException("Email đã tồn tại");
+        }
+
+        User user = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .avatar("https://placehold.co/600x400?text=" + request.getName().substring(0, 1).toUpperCase())
+                .role(request.getRole())
+                .password(passwordEncoder.encode("123"))
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        return userRepository.save(user);
     }
 }
