@@ -3,6 +3,7 @@ package com.example.movieapp.service;
 import com.example.movieapp.entity.Movie;
 import com.example.movieapp.entity.Review;
 import com.example.movieapp.entity.User;
+import com.example.movieapp.exception.ResourceNotFoundException;
 import com.example.movieapp.model.request.CreateReviewRequest;
 import com.example.movieapp.model.request.UpdateReviewRequest;
 import com.example.movieapp.repository.MovieRepository;
@@ -30,10 +31,10 @@ public class ReviewService {
         // TODO: Fix user. Về sau user chính là user đang đăng nhập
         Integer userId = 1;
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Movie movie = movieRepository.findById(request.getMovieId())
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found"));
 
         Review review = Review.builder()
                 .content(request.getContent())

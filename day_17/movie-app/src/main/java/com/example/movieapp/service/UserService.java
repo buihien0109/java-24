@@ -6,8 +6,11 @@ import com.example.movieapp.model.request.UpdateProfileUserRequest;
 import com.example.movieapp.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +41,13 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         session.setAttribute("currentUser", user);
         userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll(Sort.by("createdAt").descending());
+    }
+
+    public User getUserById(Integer id) {
+        return userRepository.findById(id).orElse(null);
     }
 }
