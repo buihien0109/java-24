@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@ToString
 @Builder
 @Getter
 @Setter

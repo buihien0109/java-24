@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
     private final AuthenticationInterceptor authenticationInterceptor;
+    private final AuthorizationInterceptor authorizationInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -18,5 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/favorites/**", "/api/users", "/api/users/**",
                         "/thong-tin-ca-nhan", "/phim-yeu-thich", "/lich-su-xem-phim"
                 );
+        registry.addInterceptor(authorizationInterceptor)
+                .addPathPatterns("/admin/**", "/api/admin/**");
     }
 }
