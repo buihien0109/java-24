@@ -268,6 +268,46 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-content-center mb-3">
+                                    <h4>Danh sách tập phim</h4>
+                                    <button class="btn btn-primary">Tạo tập phim</button>
+                                </div>
+                                <table class="table table-bordered table-hover" id="table-user">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tên tập phim</th>
+                                        <th>Link</th>
+                                        <th>Thời lượng</th>
+                                        <th>Trạng thái</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="episode : ${episodes}">
+                                        <td th:text="${episode.displayOrder}"></td>
+                                        <td th:text="${episode.name}"></td>
+                                        <td th:text="${episode.videoUrl}"></td>
+                                        <td th:text="${episode.duration}"></td>
+                                        <td th:text="${episode.status ? 'Công khai' : 'Ẩn'}"></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm"><i class="fas fa-upload"></i></button>
+                                            <button class="btn btn-primary btn-sm"><i class="fas fa-play"></i></button>
+                                            <button class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"></i></button>
+                                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
