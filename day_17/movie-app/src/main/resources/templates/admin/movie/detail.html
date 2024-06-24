@@ -261,6 +261,15 @@
                                                     ></option>
                                                 </select>
                                             </div>
+                                            <div class="form-group">
+                                                <div class="thumbnail-preview-container mb-3">
+                                                    <img th:src="${movie.poster}" alt="" id="thumbnail">
+                                                </div>
+                                                <label for="input-poster" class="btn btn-primary">
+                                                    Chọn hình ảnh
+                                                </label>
+                                                <input type="file" id="input-poster" class="d-none">
+                                            </div>
                                         </div>
                                     </div>
                                 </form>
@@ -289,14 +298,22 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="episode : ${episodes}">
+                                    <tr th:each="episode : ${episodes}" th:id="${episode.id}">
                                         <td th:text="${episode.displayOrder}"></td>
                                         <td th:text="${episode.name}"></td>
-                                        <td th:text="${episode.videoUrl}"></td>
-                                        <td th:text="${episode.duration}"></td>
+                                        <td th:text="${episode.videoUrl}" class="videoUrl"></td>
+                                        <td th:text="${episode.duration}" class="duration"></td>
                                         <td th:text="${episode.status ? 'Công khai' : 'Ẩn'}"></td>
                                         <td>
-                                            <button class="btn btn-warning btn-sm"><i class="fas fa-upload"></i></button>
+                                            <label class="btn btn-warning btn-sm mb-0" th:for="|input-video-${episode.id}|">
+                                                <i class="fas fa-upload"></i>
+                                            </label>
+                                            <input
+                                                    type="file"
+                                                    th:id="|input-video-${episode.id}|"
+                                                    class="d-none"
+                                                    th:onchange="|uploadEpisodeVideo(${episode.id}, event)|"
+                                            >
                                             <button class="btn btn-primary btn-sm" th:onclick="|showEpisodePreview(${episode.id})|">
                                                 <i class="fas fa-play"></i>
                                             </button>
@@ -471,6 +488,56 @@
 
         const video = document.querySelector('#modalPreview video');
         video.src = episode.videoUrl;
+    }
+
+    $('#modalPreview').on('hidden.bs.modal', function (event) {
+        const video = document.querySelector('#modalPreview video');
+        video.src = "";
+    })
+
+    // Upload poster
+    const inputPoster = document.getElementById('input-poster');
+    const thumbnail = document.getElementById('thumbnail');
+
+    inputPoster.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        axios.post(`/api/admin/movies/${movie.id}/upload-poster`, formData)
+            .then(res => {
+                thumbnail.src = res.data;
+                toastr.success("Upload hình ảnh thành công");
+            })
+            .catch(err => {
+                toastr.error(err.response.data.message);
+            })
+    })
+
+    // Upload episode video
+    const uploadEpisodeVideo = (episodeId, event) => {
+        const file = event.target.files[0];
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        axios.post(`/api/admin/episodes/${episodeId}/upload-video`, formData)
+            .then(res => {
+                const episodeEl = document.getElementById(episodeId);
+                const videoUrlEl = episodeEl.querySelector('.videoUrl');
+                const durationEl = episodeEl.querySelector('.duration');
+                videoUrlEl.textContent = res.data.videoUrl;
+                durationEl.textContent = res.data.duration;
+
+                const index = episodes.findIndex(e => e.id === Number(episodeId));
+                episodes[index] = res.data;
+
+                toastr.success("Upload video thành công");
+            })
+            .catch(err => {
+                toastr.error(err.response.data.message);
+            })
     }
 </script>
 </body>

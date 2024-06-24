@@ -9,9 +9,11 @@ import com.github.slugify.Slugify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class MovieService {
     private final GenreRepository genreRepository;
     private final ActorRepository actorRepository;
     private final DirectorRepository directorRepository;
+    private final CloudinaryService cloudinaryService;
 
     public List<Movie> getAllMovies() {
         return movieRepository.findAll(Sort.by("createdAt").descending());
@@ -83,5 +86,19 @@ public class MovieService {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phim với id " + id));
         movieRepository.delete(movie);
+    }
+
+    public String uploadPoster(Integer id, MultipartFile file) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phim với id " + id));
+
+        try {
+            Map result = cloudinaryService.uploadFile(file);
+            movie.setPoster((String) result.get("url"));
+            movieRepository.save(movie);
+            return (String) result.get("url");
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi upload poster");
+        }
     }
 }
