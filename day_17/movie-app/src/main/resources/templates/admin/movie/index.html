@@ -175,7 +175,7 @@
                                     <tbody>
                                     <tr th:each="movie : ${movies}">
                                         <td>
-                                            <a th:href="@{/admin/movie/{id}/detail (id=${movie.id})}" th:text="${movie.name}">Admin</a>
+                                            <a th:href="@{/admin/movies/{id}/detail (id=${movie.id})}" th:text="${movie.name}">Admin</a>
                                         </td>
                                         <td th:text="${movie.releaseYear}">admin@gmail.com</td>
                                         <td>

@@ -1,10 +1,406 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>AdminLTE 3 | Dashboard</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+    <link rel="stylesheet" href="/admin-assets/plugins/fontawesome-free/css/all.min.css"/>
+    <link rel="stylesheet" href="/admin-assets/dist/css/adminlte.min.css"/>
+    <link rel="stylesheet" href="/admin-assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+          integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="/admin-assets/plugins/select2/css/select2.min.css"/>
+    <link rel="stylesheet" href="/admin-assets/dist/css/style.css">
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+        </ul>
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+            <!-- Notifications Dropdown Menu -->
+            <li class="nav-item dropdown">
+                <a class="nav-link py-0 d-flex align-items-center" data-toggle="dropdown" href="#">
+                    <div class="user-panel">
+                        <div class="image">
+                            <img src="/admin-assets/dist/img/user2-160x160.jpg" class="img-circle border"
+                                 alt="User Image">
+                        </div>
+                    </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                    <a href="#" class="dropdown-item">
+                        <span class="text-muted">Trang chủ</span>
+                    </a>
+                    <a href="#" class="dropdown-item">
+                        <span class="text-muted">Đăng xuất</span>
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <!-- Brand Logo -->
+        <a href="/admin" class="brand-link">
+            <img src="/admin-assets/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
+                 class="brand-image img-circle elevation-3"
+                 style="opacity: 0.8"/>
+            <span class="brand-text font-weight-light">Admin</span>
+        </a>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                    data-accordion="false">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-chart-pie"></i>
+                            <p>
+                                Quản lý user
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="/admin/users" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Danh sách user</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/admin/users/create" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Tạo user</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-tree"></i>
+                            <p>
+                                Quản lý phim
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="/admin/movies" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Danh sách phim</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/admin/movies/create" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Tạo phim</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/admin/dashboard">Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="/admin/movies">Phim</a>
+                            </li>
+                            <li class="breadcrumb-item active" th:text="${movie.name}"></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row py-2">
+                    <div class="col-6">
+                        <a href="/admin/movies" type="button" class="btn btn-default">
+                            <i class="fas fa-chevron-left"></i> Quay lại
+                        </a>
+                        <button type="button" class="btn btn-info px-4" id="btn-update">
+                            Cập nhật
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-danger px-4" id="btn-delete">
+                                Xóa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <form id="form-update-movie">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="form-group">
+                                                <label>Tên phim</label>
+                                                <input type="text" class="form-control" id="name" name="name" th:value="${movie.name}"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Trailer URL</label>
+                                                <input type="text" class="form-control" id="trailerUrl"
+                                                       name="trailerUrl" th:value="${movie.trailerUrl}"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Mô tả</label>
+                                                <textarea class="form-control" rows="3" id="description"
+                                                          name="description" th:text="${movie.description}"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Thể loại</label>
+                                                <div class="select2-purple">
+                                                    <select class="select2 form-control" multiple="multiple" id="genre"
+                                                            name="genre">
+                                                        <option
+                                                                th:each="genre : ${genres}"
+                                                                th:value="${genre.id}"
+                                                                th:text="${genre.name}"
+                                                                th:selected="${movie.genres.contains(genre)}"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Đạo diễn</label>
+                                                <div class="select2-purple">
+                                                    <select class="select2 form-control" multiple="multiple"
+                                                            id="director" name="director">
+                                                        <option th:each="director : ${directors}"
+                                                                th:value="${director.id}"
+                                                                th:text="${director.name}"
+                                                                th:selected="${movie.directors.contains(director)}"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Diễn viên</label>
+                                                <div class="select2-purple">
+                                                    <select class="select2 form-control" multiple="multiple" id="actor"
+                                                            name="actor">
+                                                        <option th:each="actor : ${actors}"
+                                                                th:value="${actor.id}"
+                                                                th:text="${actor.name}"
+                                                                th:selected="${movie.actors.contains(actor)}"
+                                                        ></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label>Năm phát hành</label>
+                                                <input type="text" class="form-control" id="releaseYear"
+                                                       name="releaseYear" th:value="${movie.releaseYear}"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Loại phim</label>
+                                                <select class="form-control" id="type" name="type">
+                                                    <option value="PHIM_BO" th:selected="${movie.type.toString() == 'PHIM_BO'}">Phim bộ</option>
+                                                    <option value="PHIM_LE" th:selected="${movie.type.toString() == 'PHIM_LE'}">Phim lẻ</option>
+                                                    <option value="PHIM_CHIEU_RAP" th:selected="${movie.type.toString() == 'PHIM_CHIEU_RAP'}">Phim chiếu rạp</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Trạng thái</label>
+                                                <select class="form-control" id="status" name="status">
+                                                    <option value="false" th:selected="${!movie.status}">Ẩn</option>
+                                                    <option value="true" th:selected="${movie.status}">Công khai</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Quốc gia</label>
+                                                <select class="form-control" id="country" name="country">
+                                                    <option th:each="country : ${countries}"
+                                                            th:value="${country.id}"
+                                                            th:text="${country.name}"
+                                                            th:selected="${country.id == movie.country.id}"
+                                                    ></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="/admin-assets/plugins/jquery/jquery.min.js"></script>
+<script src="/admin-assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/admin-assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"
+        integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"
+        integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/admin-assets/plugins/select2/js/select2.full.min.js"></script>
+<script src="/admin-assets/dist/js/adminlte.js"></script>
+<script src="/web-assets/js/common.js"></script>
+
+<script th:inline="javascript">
+    const movie = [[${movie}]];
+
+    $(".select2").select2();
+
+    $('#form-update-movie').validate({
+        rules: {
+            name: {
+                required: true
+            },
+            trailerUrl: {
+                required: true
+            },
+            description: {
+                required: true
+            },
+            releaseYear: {
+                required: true
+            },
+            type: {
+                required: true
+            },
+            status: {
+                required: true
+            },
+            country: {
+                required: true
+            }
+        },
+        messages: {
+            name: {
+                required: "Tên không được để trống"
+            },
+            trailerUrl: {
+                required: "Trailer URL không được để trống"
+            },
+            description: {
+                required: "Mô tả không được để trống"
+            },
+            releaseYear: {
+                required: "Năm phát hành không được để trống"
+            },
+            type: {
+                required: "Loại phim không được để trống"
+            },
+            status: {
+                required: "Trạng thái không được để trống"
+            },
+            country: {
+                required: "Quốc gia không được để trống"
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+        }
+    });
+
+    const btnUpdate = document.getElementById('btn-update');
+    btnUpdate.addEventListener('click', () => {
+        if (!$('#form-update-movie').valid()) return;
+
+        const data = {
+            name: document.getElementById('name').value,
+            trailerUrl: document.getElementById('trailerUrl').value,
+            description: document.getElementById('description').value,
+            genreIds: $('#genre').val().map(e => Number(e)), // get value of select2 using jquery syntax
+            directorIds: $('#director').val().map(e => Number(e)),
+            actorIds: $('#actor').val().map(e => Number(e)),
+            releaseYear: Number(document.getElementById('releaseYear').value),
+            type: document.getElementById('type').value,
+            status: document.getElementById('status').value === 'true',
+            countryId: Number(document.getElementById('country').value)
+        }
+
+        axios.put(`/api/admin/movies/${movie.id}`, data)
+            .then(res => {
+                toastr.success("Cập nhật thông tin phim thành công");
+            })
+            .catch(err => {
+                toastr.error(err.response.data.message);
+            })
+    })
+
+    // Xóa movie
+    const btnDelete = document.getElementById('btn-delete');
+    btnDelete.addEventListener('click', () => {
+        const isConfirm = window.confirm("Bạn có chắc chắn muốn xóa phim này không?");
+        if (!isConfirm) return;
+
+        axios.delete(`/api/admin/movies/${movie.id}`)
+            .then(res => {
+                toastr.success("Xóa phim thành công");
+                setTimeout(() => {
+                    window.location.href = '/admin/movies';
+                }, 1500);
+            })
+            .catch(err => {
+                toastr.error(err.response.data.message);
+            })
+    })
+</script>
 </body>
+
 </html>

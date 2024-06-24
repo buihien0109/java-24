@@ -16,6 +16,10 @@ public class EpisodeService {
         return episodeRepository.findByMovie_IdAndStatusOrderByDisplayOrderAsc(movieId, true);
     }
 
+    public List<Episode> getEpisodeListOfMovieByAdmin(Integer movieId) {
+        return episodeRepository.findByMovie_IdOrderByDisplayOrderAsc(movieId);
+    }
+
     public Episode getEpisodeByDisplayOrder(Integer movieId, String tap) {
         Integer covertTap = tap.equals("full") ? 1 : Integer.parseInt(tap);
         return episodeRepository

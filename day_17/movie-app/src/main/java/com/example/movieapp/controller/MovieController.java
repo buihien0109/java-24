@@ -5,6 +5,7 @@ import com.example.movieapp.repository.ActorRepository;
 import com.example.movieapp.repository.CountryRepository;
 import com.example.movieapp.repository.DirectorRepository;
 import com.example.movieapp.repository.GenreRepository;
+import com.example.movieapp.service.EpisodeService;
 import com.example.movieapp.service.MovieService;
 import com.example.movieapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class MovieController {
     private final MovieService movieService;
+    private final EpisodeService episodeService;
     private final DirectorRepository directorRepository;
     private final ActorRepository actorRepository;
     private final GenreRepository genreRepository;
@@ -41,11 +43,12 @@ public class MovieController {
 
     @GetMapping("/{id}/detail")
     public String getDetail(@PathVariable Integer id, Model model) {
-        model.addAttribute("user", movieService.getMovieById(id));
+        model.addAttribute("movie", movieService.getMovieById(id));
         model.addAttribute("directors", directorRepository.findAll());
         model.addAttribute("actors", actorRepository.findAll());
         model.addAttribute("genres", genreRepository.findAll());
         model.addAttribute("countries", countryRepository.findAll());
+        model.addAttribute("episodes", episodeService.getEpisodeListOfMovieByAdmin(id));
         return "admin/movie/detail";
     }
 }

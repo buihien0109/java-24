@@ -54,4 +54,34 @@ public class MovieService {
                 .build();
         return movieRepository.save(movie);
     }
+
+    public Movie updateMovie(Integer id, UpsertMovieRequest request) {
+        Slugify slugify = Slugify.builder().build();
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phim với id " + id));
+
+        Country country = countryRepository.findById(request.getCountryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Quốc gia không tồn tại"));
+
+        movie.setName(request.getName());
+        movie.setSlug(slugify.slugify(request.getName()));
+        movie.setDescription(request.getDescription());
+        movie.setReleaseYear(request.getReleaseYear());
+        movie.setTrailerUrl(request.getTrailerUrl());
+        movie.setType(request.getType());
+        movie.setStatus(request.getStatus());
+        movie.setUpdatedAt(LocalDateTime.now());
+        movie.setPublishedAt(request.getStatus() ? LocalDateTime.now() : null);
+        movie.setCountry(country);
+        movie.setGenres(genreRepository.findAllById(request.getGenreIds()));
+        movie.setActors(actorRepository.findAllById(request.getActorIds()));
+        movie.setDirectors(directorRepository.findAllById(request.getDirectorIds()));
+        return movieRepository.save(movie);
+    }
+
+    public void deleteMovie(Integer id) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy phim với id " + id));
+        movieRepository.delete(movie);
+    }
 }
