@@ -177,7 +177,8 @@
                                         <div class="col-8">
                                             <div class="form-group">
                                                 <label>Tên phim</label>
-                                                <input type="text" class="form-control" id="name" name="name" th:value="${movie.name}"/>
+                                                <input type="text" class="form-control" id="name" name="name"
+                                                       th:value="${movie.name}"/>
                                             </div>
                                             <div class="form-group">
                                                 <label>Trailer URL</label>
@@ -239,16 +240,24 @@
                                             <div class="form-group">
                                                 <label>Loại phim</label>
                                                 <select class="form-control" id="type" name="type">
-                                                    <option value="PHIM_BO" th:selected="${movie.type.toString() == 'PHIM_BO'}">Phim bộ</option>
-                                                    <option value="PHIM_LE" th:selected="${movie.type.toString() == 'PHIM_LE'}">Phim lẻ</option>
-                                                    <option value="PHIM_CHIEU_RAP" th:selected="${movie.type.toString() == 'PHIM_CHIEU_RAP'}">Phim chiếu rạp</option>
+                                                    <option value="PHIM_BO"
+                                                            th:selected="${movie.type.toString() == 'PHIM_BO'}">Phim bộ
+                                                    </option>
+                                                    <option value="PHIM_LE"
+                                                            th:selected="${movie.type.toString() == 'PHIM_LE'}">Phim lẻ
+                                                    </option>
+                                                    <option value="PHIM_CHIEU_RAP"
+                                                            th:selected="${movie.type.toString() == 'PHIM_CHIEU_RAP'}">
+                                                        Phim chiếu rạp
+                                                    </option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label>Trạng thái</label>
                                                 <select class="form-control" id="status" name="status">
                                                     <option value="false" th:selected="${!movie.status}">Ẩn</option>
-                                                    <option value="true" th:selected="${movie.status}">Công khai</option>
+                                                    <option value="true" th:selected="${movie.status}">Công khai
+                                                    </option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
@@ -284,7 +293,8 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-content-center mb-3">
                                     <h4>Danh sách tập phim</h4>
-                                    <button class="btn btn-primary" onclick="openModalCreateEpisode()">Tạo tập phim</button>
+                                    <button class="btn btn-primary" onclick="openModalCreateEpisode()">Tạo tập phim
+                                    </button>
                                 </div>
                                 <table class="table table-bordered table-hover" id="table-episode">
                                     <thead>
@@ -301,11 +311,17 @@
                                     <tr th:each="episode : ${episodes}">
                                         <td th:text="${episode.displayOrder}"></td>
                                         <td th:text="${episode.name}"></td>
-                                        <td th:text="${episode.videoUrl != null ? episode.videoUrl : 'Chưa cập nhật'}" class="videoUrl"></td>
-                                        <td th:text="${episode.duration != null ? episode.duration : 'Chưa cập nhật'}" class="duration"></td>
+                                        <td
+                                                th:text="${episode.videoUrl != null ? episode.videoUrl : 'Chưa cập nhật'}"
+                                                class="videoUrl"
+                                                style="word-break: break-all"
+                                        ></td>
+                                        <td th:text="${episode.duration != null ? episode.duration : 'Chưa cập nhật'}"
+                                            class="duration"></td>
                                         <td th:text="${episode.status ? 'Công khai' : 'Ẩn'}"></td>
                                         <td>
-                                            <label class="btn btn-warning btn-sm mb-0" th:for="|input-video-${episode.id}|">
+                                            <label class="btn btn-warning btn-sm mb-0"
+                                                   th:for="|input-video-${episode.id}|">
                                                 <i class="fas fa-upload"></i>
                                             </label>
                                             <input
@@ -314,11 +330,16 @@
                                                     class="d-none"
                                                     th:onchange="|uploadEpisodeVideo(${episode.id}, event)|"
                                             >
-                                            <button class="btn btn-primary btn-sm" th:onclick="|showEpisodePreview(${episode.id})|">
+                                            <button class="btn btn-primary btn-sm"
+                                                    th:onclick="|showEpisodePreview(${episode.id})|">
                                                 <i class="fas fa-play"></i>
                                             </button>
-                                            <button class="btn btn-success btn-sm" th:onclick="|openModalUpdateEpisode(${episode.id})|"><i class="fas fa-pencil-alt"></i></button>
-                                            <button class="btn btn-danger btn-sm" th:onclick="|deleteEpisode(${episode.id})|"><i class="fas fa-trash-alt"></i></button>
+                                            <button class="btn btn-success btn-sm"
+                                                    th:onclick="|openModalUpdateEpisode(${episode.id})|"><i
+                                                    class="fas fa-pencil-alt"></i></button>
+                                            <button class="btn btn-danger btn-sm"
+                                                    th:onclick="|deleteEpisode(${episode.id})|"><i
+                                                    class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -364,11 +385,11 @@
                 <form id="form-episode">
                     <div class="form-group">
                         <label>Tên tập phim</label>
-                        <input type="text" class="form-control" id="episodeName" name="name" />
+                        <input type="text" class="form-control" id="episodeName" name="name"/>
                     </div>
                     <div class="form-group">
                         <label>Tập số bao nhiêu</label>
-                        <input type="text" class="form-control" id="episodeDisplayOrder" name="displayOrder" />
+                        <input type="text" class="form-control" id="episodeDisplayOrder" name="displayOrder"/>
                     </div>
                     <div class="form-group">
                         <label>Trạng thái</label>

@@ -146,7 +146,9 @@ const renderEpisodes = (episodes) => {
             <tr>
                 <td>${episode.displayOrder}</td>
                 <td>${episode.name}</td>
-                <td class="videoUrl">${episode.videoUrl ?? "Chưa cập nhật"}</td>
+                <td class="videoUrl" style="word-break: break-all;">
+                    ${episode.videoUrl ?? "Chưa cập nhật"}
+                </td>
                 <td class="duration">${episode.duration ?? "Chưa cập nhật"}</td>
                 <td>${episode.status ? 'Công khai' : 'Ẩn'}</td>
                 <td>
