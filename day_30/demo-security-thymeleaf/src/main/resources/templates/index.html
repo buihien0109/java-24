@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+<h1>Home Page</h1>
+
+<button sec:authorize="!isAuthenticated()">
+    <a href="/login">Đăng nhập</a>
+</button>
+
+<th:block sec:authorize="isAuthenticated()">
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Đăng xuất</button>
+    </form>
+
+    <h2>Xin chào: <th:block sec:authentication="name"></th:block></h2>
+
+    <ul>
+        <li><a href="/">Home page</a></li>
+        <li sec:authorize="hasRole('USER')"><a href="/user">User page</a></li>
+        <li sec:authorize="hasRole('ADMIN')"><a href="/admin">Admin page</a></li>
+    </ul>
+</th:block>
+</body>
+</html>
