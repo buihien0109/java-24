@@ -3,13 +3,16 @@ package com.example.demosecurity.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,6 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final CustomFilter customFilter;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -31,30 +35,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // Cấu hình đường dẫn
-        String[] publicRoutes = new String[]{"/css/**", "/js/**", "/images/**"};
-        http.authorizeHttpRequests(auth -> {
-//            auth.requestMatchers(publicRoutes).permitAll();
-//            auth.requestMatchers("/").permitAll();
-//            auth.requestMatchers("/user").hasRole("USER");
-//            auth.requestMatchers("/admin").hasRole("ADMIN");
-//            auth.requestMatchers("/aa/**", "/bb/**").hasAnyRole("USER", "ADMIN");
-//            auth.requestMatchers(HttpMethod.POST, "/cc/**").hasRole("AUTHOR");
-//            auth.requestMatchers(HttpMethod.GET, "/dd/**").hasAuthority("ROLE_USER");
-//            auth.requestMatchers("/abc/**", "/xyz/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN");
-//            auth.anyRequest().authenticated();
-            auth.anyRequest().permitAll();
-        });
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
-        // Cấu hình form login
-        http.formLogin(form -> {
-            form.loginPage("/login");
-            form.loginProcessingUrl("/login-process");
-            form.usernameParameter("email");
-            form.passwordParameter("pass");
-            form.defaultSuccessUrl("/", true);
-            form.permitAll();
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable());
+
+        // Cấu hình đường dẫn
+        http.authorizeHttpRequests(auth -> {
+            auth.anyRequest().permitAll();
         });
 
         // Cấu hình logout
@@ -68,6 +59,9 @@ public class SecurityConfig {
 
         // Cấu hình xác thục
         http.authenticationProvider(authenticationProvider());
+
+        // Cấu hình filter
+        http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

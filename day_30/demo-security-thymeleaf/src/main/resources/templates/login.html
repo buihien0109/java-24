@@ -7,16 +7,43 @@
 <body>
 <h1>Login Page</h1>
 
-<form th:action="@{/login-process}" method="post">
+<form id="form-login">
     <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="email"/>
+        <label for="email">Email:</label>
+        <input type="text" id="email"/>
     </div>
     <div>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="pass"/>
+        <input type="password" id="password"/>
     </div>
     <button type="submit">Đăng nhập</button>
 </form>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    const formLoginEl = document.getElementById('form-login');
+    const emailEl = document.getElementById('email');
+    const passwordEl = document.getElementById('password');
+    formLoginEl.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const email = emailEl.value;
+        const password = passwordEl.value;
+        const data = {
+            email,
+            password
+        };
+        try {
+            const response = await axios.post('/api/auth/login', data);
+            if (response.status === 200) {
+                alert('Đăng nhập thành công');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            }
+        } catch (error) {
+            alert(error.response.data.message);
+        }
+    });
+</script>
 </body>
 </html>
