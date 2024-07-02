@@ -1,6 +1,6 @@
 package com.example.demosecurity.security;
 
-import com.example.demosecurity.model.User;
+import com.example.demosecurity.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
