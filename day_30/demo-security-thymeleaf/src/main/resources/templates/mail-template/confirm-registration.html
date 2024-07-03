@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 600px;
+            margin: 100px auto;
+        }
+
+        .header {
+            padding: 20px 0;
+            background-color: #222;
+        }
+
+        .header img {
+            display: block;
+            margin: 0 auto;
+            width: 200px;
+        }
+        .content {
+            padding: 20px;
+            background-color: #fff;
+        }
+        .content p {
+            margin-bottom: 16px;
+        }
+        .content .name {
+            font-weight: bold;
+        }
+        .btn-confirm {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #222;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="https://motchilltv.io/logo_motchill.png" alt="">
+    </div>
+
+    <div class="content">
+        <p>Xin chào: <span class="name" th:text="${user.name}">Bùi Hiên</span></p>
+        <p>Chào mừng bạn đã tham gia trang web của chúng tôi. Vui lòng kích vào đường link bên dưới để xác thực tài khoản</p>
+
+        <a th:href="${link}" class="btn-confirm">Link xác thực</a>
+
+        <p>Link xác thực có thời hạn hiệu lực trong vòng 1 ngày kể từ ngày đăng ký</p>
+
+        <p>Trân trọng</p>
+    </div>
+</div>
+</body>
+</html>

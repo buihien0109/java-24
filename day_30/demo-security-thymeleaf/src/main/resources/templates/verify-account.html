@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác thực tài khoản</title>
+</head>
+<body>
+<h1>Xác thực tài khoản</h1>
+
+<h2 th:text="${response.message}"></h2>
+
+<button th:if="${response.success}">
+    <a href="/login">Đăng nhập</a>
+</button>
+</body>
+</html>

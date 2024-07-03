@@ -41,7 +41,12 @@
                 }, 1000);
             }
         } catch (error) {
-            alert(error.response.data.message);
+            if (typeof error.response.data.message  === "object") {
+                alert(JSON.stringify(error.response.data.message));
+            }
+            if (typeof error.response.data.message  === "string") {
+                alert(error.response.data.message);
+            }
         }
     });
 </script>
