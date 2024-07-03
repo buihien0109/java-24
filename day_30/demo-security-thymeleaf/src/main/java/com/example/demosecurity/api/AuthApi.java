@@ -1,6 +1,7 @@
 package com.example.demosecurity.api;
 
 import com.example.demosecurity.model.request.LoginRequest;
+import com.example.demosecurity.model.request.RegisterRequest;
 import com.example.demosecurity.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,12 @@ public class AuthApi {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         authService.login(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        authService.register(request);
         return ResponseEntity.ok().build();
     }
 }

@@ -34,4 +34,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     List<Role> roles;
+
+    Boolean enabled; // Trạng thái của tài khoản
 }
